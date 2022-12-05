@@ -44,20 +44,6 @@ const verification = (email) => {
   );
 };
 
-const codePassword = (email, otp) => {
-  return new Promise((resolve, reject) =>
-    Pool.query(
-      `UPDATE users SET otp='${otp}' WHERE email='${email}'`,
-      (err, result) => {
-        if (!err) {
-          resolve(result);
-        } else {
-          reject(err);
-        }
-      }
-    )
-  );
-};
 const changePassword = (email, password) => {
   return new Promise((resolve, reject) =>
     Pool.query(
@@ -77,6 +63,5 @@ module.exports = {
   create,
   findEmail,
   verification,
-  codePassword,
   changePassword,
 };

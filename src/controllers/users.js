@@ -4,11 +4,10 @@ const {
   findEmail,
   verification,
   changePassword,
-  codePassword,
 } = require("../models/users");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
-const { generateToken } = require("../helpers/auth");
+const { generateToken, decodeToken } = require("../helpers/auth");
 const email = require("../middlewares/email");
 
 const Port = process.env.PORT;
@@ -139,72 +138,32 @@ const UsersController = {
     if (!users) {
       return response(res, 404, false, null, " email not found");
     }
-
-    let digits = "0123456789";
-    let otp = "";
-    for (let i = 0; i < 6; i++) {
-      otp += digits[Math.floor(Math.random() * 10)];
-    }
-
-    let data = {
-      fullname: req.body.fullname,
-      otp,
+    let payload = {
+      email: req.body.email,
     };
-    try {
-      const result = await codePassword(data);
-      if (result) {
-        let verifUrl = `http://${Host}:${Port}/users/${otp}`;
-        let text = `Hello ${req.body.fullname} \n Thank you for join us. Please confirm your email by clicking on the following link ${verifUrl}`;
-        const subject = `${otp} is your otp code change password`;
-        let sendEmail = email(req.body.email, subject, text);
-        if (sendEmail == "email not sent!") {
-          return response(res, 404, false, null, "code fail");
-        }
-        response(
-          res,
-          200,
-          true,
-          { email: req.body.email },
-          "code success please check your email"
-        );
-      }
-    } catch (err) {
-      console.log(err);
-      response(res, 404, false, err, " code fail");
-    }
-  },
+    const token = generateToken(payload);
 
-  codeResetPassword: async (req, res) => {
-    const { otp } = req.body;
-    const {
-      rows: [users],
-    } = await findEmail(email);
-    if (!users) {
-      return response(res, 404, false, null, "otp fail");
+    let text = `Hello ${users.fullname} \n please click link below to reset password http://localhost:3500/users/resetPassword/ ${token}`;
+    const subject = `Reset Password`;
+    let sendEmail = email(req.body.email, subject, text);
+    if (sendEmail == "email not sent!") {
+      return response(res, 404, false, null, "email fail");
     }
-    if (users.otp == otp) {
-      const result = await codePassword(req.body.email);
-      return response(res, 200, true, result, " verification otp success");
-    }
-    return response(
-      res,
-      404,
-      false,
-      null,
-      " wrong otp please check your email"
-    );
+    return response(res, 200, true, null, "send email success");
   },
 
   resetPassword: async (req, res) => {
+    const token = req.params.token;
+    const decoded = decodeToken(token);
     const {
       rows: [users],
     } = await findEmail(decoded.email);
     if (!users) {
-      return response(res, 404, false, null, " email not found");
+      return response(res, 404, false, null, " token not found");
     }
     let password = bcrypt.hashSync(req.body.password);
     const result = await changePassword(decoded.email, password);
-    return response(res, 200, true, result, " change password email success");
+    return response(res, 200, true, result.body, " change password success");
   },
 };
 
