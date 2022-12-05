@@ -8,7 +8,7 @@ const {
 } = require("../models/users");
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
-const { generateToken, decodeToken } = require("../helpers/auth");
+const { generateToken } = require("../helpers/auth");
 const email = require("../middlewares/email");
 
 const Port = process.env.PORT;
