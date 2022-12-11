@@ -19,12 +19,13 @@ const upload = multer({
     if (
       file.mimetype === "image/png" ||
       file.mimetype === "image/jpg" ||
-      file.mimetype === "video/mp4"
+      file.mimetype === "video/mp4" ||
+      file.mimetype === "video/mkv"
     ) {
       cb(null, true);
     } else {
       cb(null, false);
-      return cb(new Error("Input file with png or jpg, mp4 format"));
+      return cb(new Error("Input file with png, jpg, mp4, mkv format"));
     }
   },
 });

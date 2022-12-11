@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const { recipeController } = require("../controllers/recipe");
+const { recipeControllers } = require("../controllers/recipe");
 const upload = require("../middlewares/upload");
 
-router.post("/addRecipe", upload.single("photo"), recipeController.addRecipe);
+router.post("/add-Recipe", upload.single("photo"), recipeControllers.addRecipe);
+router.get("/", recipeControllers.getRecipe);
+router.get("/:id_recipe", recipeControllers.getDetailRecipe);
 
 module.exports = router;

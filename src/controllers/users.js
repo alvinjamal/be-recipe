@@ -18,7 +18,6 @@ const UsersController = {
     let {
       rows: [users],
     } = await findEmail(req.body.email);
-    let role = req.params.role;
 
     if (users) {
       return response(res, 404, false, "email already use", " register fail");
@@ -33,7 +32,7 @@ const UsersController = {
 
     let password = bcrypt.hashSync(req.body.password);
     let data = {
-      id: uuidv4(),
+      id_user: uuidv4(),
       fullname: req.body.fullname,
       email: req.body.email,
       phone: req.body.phone,
@@ -103,7 +102,6 @@ const UsersController = {
     delete users.verif;
     let payload = {
       email: users.email,
-      role: users.role,
     };
     users.token = generateToken(payload);
     response(res, 200, true, users, "login success");
@@ -159,11 +157,11 @@ const UsersController = {
       rows: [users],
     } = await findEmail(decoded.email);
     if (!users) {
-      return response(res, 404, false, null, " token not found");
+      return response(res, 404, false, null, " email not found");
     }
     let password = bcrypt.hashSync(req.body.password);
     const result = await changePassword(decoded.email, password);
-    return response(res, 200, true, result.body, " change password success");
+    return response(res, 200, true, result, " change password success");
   },
 };
 
