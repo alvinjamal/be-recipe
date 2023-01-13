@@ -3,6 +3,7 @@ CREATE TABLE users(
     fullname VARCHAR NOT NULL, 
     email TEXT NOT NULL,  
     phone VARCHAR, password TEXT NOT NULL, 
+    photo VARCHAR(300) DEFAULT NULL,
     verif VARCHAR(1), 
     otp VARCHAR(6));
 

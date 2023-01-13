@@ -20,11 +20,12 @@ const selectRecipeById = (id_recipe) =>
     );
   });
 
-const selectDataRecipe = (page, limit, sort, sortby, search) =>
+const selectDataRecipe = (page, limit, sortby, sort, search) =>
   new Promise((resolve, reject) => {
+    console.log(page, limit, sort, sortby, search);
     const offset = (page - 1) * limit;
     Pool.query(
-      `select * FROM recipe where (title) ilike '%${search}%' order by ${sortby} ${sort} limit ${limit} offset ${offset} `,
+      `SELECT * FROM recipe WHERE title ILIKE '%${search}%' ORDER BY ${sortby} ${sort} LIMIT ${limit} OFFSET ${offset}`,
       (err, res) => {
         if (err) {
           reject(err);
@@ -33,4 +34,5 @@ const selectDataRecipe = (page, limit, sort, sortby, search) =>
       }
     );
   });
+
 module.exports = { insert, selectRecipeById, selectDataRecipe };

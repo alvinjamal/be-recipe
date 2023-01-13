@@ -21,27 +21,43 @@ const recipeControllers = {
     }
   },
 
-  getDetailRecipe: (req, res, next) => {
-    ModelsRecipe.selectRecipeById(req.params.id_recipe)
-      .then((result) =>
-        response(res, 200, true, result.rows, "Get detail recipe success")
-      )
-      .catch((err) => response(res, 404, false, err, "get detail recipe fail"));
+  getDetailById: async (req, res, next) => {
+    try {
+      const { id } = req.params;
+
+      const {
+        rows: [recipe],
+      } = await ModelsRecipe.selectDetailRecipeById(id);
+
+      if (!recipe) {
+        return response(res, 404, false, [], "recipe not found");
+      }
+
+      response(res, 200, true, recipe, "Get data recipe success");
+    } catch (error) {
+      response(res, 404, false, null, " Get data recipe failed");
+    }
   },
 
-  getRecipe: (req, res) => {
-    let data = {
-      page: req.query.page || 1,
-      limit: req.query.limit || 6,
-      sort: req.query.sort || "asc",
-      sortby: req.query.sortby || "id_recipe",
-      search: req.query.search || "",
-    };
-    ModelsRecipe.selectDataRecipe(data)
-      .then((result) =>
-        response(res, 200, true, result.rows, "Get recipe success")
-      )
-      .catch((err) => response(res, 404, false, err, "Get recipe failed"));
+  getRecipe: async (req, res, next) => {
+    try {
+      const page = Number(req.query.page) || 1;
+      const limit = Number(req.query.limit) || 20;
+      const sortby = req.query.sortby || "title";
+      const sort = req.query.sort || "ASC";
+      const search = req.query.search || "";
+      const result = await ModelsRecipe.selectDataRecipe(
+        page,
+        limit,
+        sortby,
+        sort,
+        search
+      );
+      response(res, 200, true, result.rows, "Get Data Success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "Get Data Fail");
+    }
   },
 };
 exports.recipeControllers = recipeControllers;

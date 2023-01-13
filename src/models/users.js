@@ -59,9 +59,21 @@ const changePassword = (email, password) => {
   );
 };
 
+const detailUser = (id) => {
+  return Pool.query(
+    `SELECT users.fullname, users.photo,users.phone FROM users WHERE id_users='${id}'`
+  );
+};
+
+const updatePhoto = (id, { photo }) => {
+  return Pool.query(`UPDATE users SET photo='${photo}' WHERE id_users='${id}'`);
+};
+
 module.exports = {
   create,
   findEmail,
   verification,
   changePassword,
+  detailUser,
+  updatePhoto,
 };

@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const { generateToken, decodeToken } = require("../helpers/auth");
 const email = require("../middlewares/email");
+const ModelUsers = require("../models/users");
 
 const Port = process.env.PORT;
 const Host = process.env.HOST;
@@ -141,7 +142,7 @@ const UsersController = {
     };
     const token = generateToken(payload);
 
-    let text = `Hello ${users.fullname} \n please click link below to reset password http://localhost:3500/users/resetPassword/ ${token}`;
+    let text = `Hello ${users.fullname} \n please click link below to reset password {http://localhost:3500/users/forgot}/ ${token}`;
     const subject = `Reset Password`;
     let sendEmail = email(req.body.email, subject, text);
     if (sendEmail == "email not sent!") {
@@ -162,6 +163,31 @@ const UsersController = {
     let password = bcrypt.hashSync(req.body.password);
     const result = await changePassword(decoded.email, password);
     return response(res, 200, true, result, " change password success");
+  },
+
+  getDetailUsers: (req, res) => {
+    const users = req.payload.id;
+    ModelUsers.detailUser(users)
+      .then((result) =>
+        response(res, 200, true, result.rows, "Get data success")
+      )
+      .catch((err) => response(res, 404, false, err, "Get data fail"));
+  },
+
+  updatePhoto: async (req, res) => {
+    const id_users = req.payload.id;
+    console.log(id_users, "Id User");
+    const {
+      photo: [photo],
+    } = req.files;
+
+    req.body.photo = photo.path;
+
+    ModelUsers.updatePhoto(id_users, req.body)
+      .then((result) =>
+        response(res, 200, false, result, "Update Foto Berhasil")
+      )
+      .catch((err) => response(res, 400, false, err, "Update Foto Gagal"));
   },
 };
 
