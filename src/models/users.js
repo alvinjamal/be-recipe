@@ -59,14 +59,53 @@ const changePassword = (email, password) => {
   );
 };
 
-const detailUser = (id) => {
-  return Pool.query(
-    `SELECT users.fullname, users.photo,users.phone FROM users WHERE id_users='${id}'`
+const getProfile = (email) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(
+      `SELECT * FROM users WHERE email = '${email}';`,
+      (error, result) => {
+        if (!error) {
+          resolve(result);
+        } else {
+          reject(error);
+        }
+      }
+    );
+  });
+};
+
+const getData = () => {
+  return new Promise((resolve, reject) =>
+    Pool.query(`SELECT * FROM users`, (err, result) => {
+      if (!err) {
+        resolve(result);
+      } else {
+        reject(err);
+      }
+    })
   );
 };
 
-const updatePhoto = (id, { photo }) => {
-  return Pool.query(`UPDATE users SET photo='${photo}' WHERE id_users='${id}'`);
+const getDataUsersById = (id_user) => {
+  console.log(id_user);
+  return Pool.query(`SELECT * FROM users WHERE id_user = '${id_user}'`);
+};
+
+const updateProfile = ({ photo }, email) => {
+  return new Promise((resolve, reject) => {
+    Pool.query(
+      `UPDATE users SET photo='${photo}' WHERE email = '${email}';`,
+      [photo],
+      (err, result) => {
+        if (!err) {
+          console.log(result);
+          resolve(result);
+        } else {
+          reject(new Error(err));
+        }
+      }
+    );
+  });
 };
 
 module.exports = {
@@ -74,6 +113,8 @@ module.exports = {
   findEmail,
   verification,
   changePassword,
-  detailUser,
-  updatePhoto,
+  getDataUsersById,
+  getProfile,
+  getData,
+  updateProfile,
 };

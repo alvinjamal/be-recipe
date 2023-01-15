@@ -1,35 +1,30 @@
 const multer = require("multer");
-const path = require("path");
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { response } = require("./common");
 
-cloudinary.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-});
-
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: "food",
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./upload");
+  },
+  filename: function (req, file, cb) {
+    const uniq = Date.now() + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniq + ".png");
   },
 });
 
 const upload = multer({
+  limits: { fileSize: 10 * 1024 ** 2 },
   storage: storage,
-  limits: { fileSize: 2097152 },
-  fileFilter: function (req, file, cb) {
-    const filetypes = /jpeg|jpg|png/;
-    const extname = filetypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (mimetype && extname) {
-      return cb(null, true);
+  fileFilter: (res, file, cb) => {
+    if (
+      file.mimetype === "image/png" ||
+      file.mimetype === "image/jpg" ||
+      file.mimetype === "video/mp4" ||
+      file.mimetype === "video/mkv"
+    ) {
+      cb(null, true);
     } else {
-      cb(new Error("jpg & png only"));
+      cb(null, false);
+      return cb(new Error("Input file with png, jpg, mp4, mkv format"));
     }
   },
 });

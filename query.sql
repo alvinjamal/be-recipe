@@ -7,24 +7,30 @@ CREATE TABLE users(
     verif VARCHAR(1), 
     otp VARCHAR(6));
 
-ALTER TABLE users ADD COLUMN verif VARCHAR(1);
-
-DROP TABLE users ;
-
-DROP TABLE comment ;
- 
-
 CREATE TABLE recipe(
     id_recipe SERIAL PRIMARY KEY,
     title VARCHAR, 
     ingredients VARCHAR, 
     photo VARCHAR,
-    video VARCHAR
+    video VARCHAR,
+    user_id VARCHAR REFERENCES users(id_user)
     );
 
 CREATE TABLE comment(
     id_comment SERIAL PRIMARY KEY,
-    comment_text VARCHAR NOT NULL,
+    comment VARCHAR NOT NULL,
     users_id VARCHAR REFERENCES users(id_user),
     recipe_id INT REFERENCES recipe(id_recipe)
 );
+
+CREATE TABLE liked_recipe (
+    id_liked SERIAL PRIMARY KEY,
+    user_id VARCHAR REFERENCES users(id_user),
+    recipe_id INT REFERENCES recipe(id_recipe)
+);
+
+CREATE TABLE saved_recipe (
+    id_saved SERIAL PRIMARY KEY,
+    user_id VARCHAR REFERENCES users(id_user),
+    recipe_id INT REFERENCES recipe(id_recipe)
+)

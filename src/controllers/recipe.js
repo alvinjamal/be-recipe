@@ -23,11 +23,11 @@ const recipeControllers = {
 
   getDetailById: async (req, res, next) => {
     try {
-      const { id } = req.params;
+      const { id_recipe } = req.params;
 
       const {
         rows: [recipe],
-      } = await ModelsRecipe.selectDetailRecipeById(id);
+      } = await ModelsRecipe.selectRecipeById(id_recipe);
 
       if (!recipe) {
         return response(res, 404, false, [], "recipe not found");
@@ -37,6 +37,30 @@ const recipeControllers = {
     } catch (error) {
       response(res, 404, false, null, " Get data recipe failed");
     }
+  },
+
+  getRecipeUser: (req, res, next) => {
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+    const sortby = req.query.sortby || "id";
+    const sort = req.query.sort || "DESC";
+    const search = req.query.search || "";
+    const user_recipe = req.payload.id;
+
+    ModelsRecipe.selectDataUser(
+      limit,
+      offset,
+      sort,
+      sortby,
+      search,
+      page,
+      user_recipe
+    )
+      .then((result) =>
+        response(res, 200, true, result.rows, "get data sukses")
+      )
+      .catch((err) => response(res, 401, false, err.message, "get data fail"));
   },
 
   getRecipe: async (req, res, next) => {
@@ -58,6 +82,14 @@ const recipeControllers = {
       console.log(err);
       response(res, 404, false, err, "Get Data Fail");
     }
+  },
+
+  delete: (req, res, next) => {
+    ModelsRecipe.deleteRecipe(req.params.id_recipe)
+      .then((result) =>
+        response(res, 200, true, result.rows, "Delete data succsess")
+      )
+      .catch((err) => response(res, 401, false, err, "Delete data fail"));
   },
 };
 exports.recipeControllers = recipeControllers;

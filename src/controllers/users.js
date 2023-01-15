@@ -8,6 +8,7 @@ const {
 const bcrypt = require("bcryptjs");
 const { v4: uuidv4 } = require("uuid");
 const { generateToken, decodeToken } = require("../helpers/auth");
+const cloudinary = require("../config/photo");
 const email = require("../middlewares/email");
 const ModelUsers = require("../models/users");
 
@@ -165,29 +166,53 @@ const UsersController = {
     return response(res, 200, true, result, " change password success");
   },
 
-  getDetailUsers: (req, res) => {
-    const users = req.payload.id;
-    ModelUsers.detailUser(users)
-      .then((result) =>
-        response(res, 200, true, result.rows, "Get data success")
-      )
-      .catch((err) => response(res, 404, false, err, "Get data fail"));
+  getDataAll: async (req, res, next) => {
+    try {
+      const get = await ModelUsers.getData();
+      response(res, 200, true, get.rows, "Get users success");
+    } catch (err) {
+      response(res, 404, false, err, "Get users fail");
+    }
   },
 
-  updatePhoto: async (req, res) => {
-    const id_users = req.payload.id;
-    console.log(id_users, "Id User");
-    const {
-      photo: [photo],
-    } = req.files;
-
-    req.body.photo = photo.path;
-
-    ModelUsers.updatePhoto(id_users, req.body)
+  getDetail: (req, res) => {
+    ModelUsers.getDataUsersById(req.params.id_user)
       .then((result) =>
-        response(res, 200, false, result, "Update Foto Berhasil")
+        response(res, 200, true, result.rows, "Get detail users success")
       )
-      .catch((err) => response(res, 400, false, err, "Update Foto Gagal"));
+      .catch((err) =>
+        response(res, 404, false, err, "Get detail users failed")
+      );
+  },
+
+  updateUsers: async (req, res, next) => {
+    const profile = {};
+    const email = req.payload.email;
+    const { photo } = req.files;
+    profile.photo = photo ? photo.path : null;
+
+    updateProfile(email, req.body)
+      .then((data) => {
+        responses(res, 200, true, data, "success upload photo");
+      })
+      .catch((e) => responses(res, 404, false, e, "failed upload photo"));
+  },
+
+  getProfile: async (req, res, next) => {
+    const email = req.payload.email;
+    console.log(email);
+    const {
+      rows: [user],
+    } = await getProfile(email);
+
+    if (user === undefined) {
+      res.json({
+        message: "undefined user",
+      });
+      return;
+    }
+    delete user.password;
+    return responses(res, 200, true, user, "get profile success");
   },
 };
 
