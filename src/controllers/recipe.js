@@ -39,28 +39,25 @@ const recipeControllers = {
     }
   },
 
-  getRecipeUser: (req, res, next) => {
-    const page = Number(req.query.page) || 1;
-    const limit = Number(req.query.limit) || 10;
-    const offset = (page - 1) * limit;
-    const sortby = req.query.sortby || "id";
-    const sort = req.query.sort || "DESC";
-    const search = req.query.search || "";
-    const user_recipe = req.payload.id;
+  getRecipeUser: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log("id_user", user_id);
+      const result = await ModelsRecipe.getRecipeByUser(user_id);
+      response(res, 200, true, result.rows, "Success Get Recipe By user");
+    } catch (err) {
+      response(res, 400, false, err, "Get Recipe By User Failed");
+    }
+  },
 
-    ModelsRecipe.selectDataUser(
-      limit,
-      offset,
-      sort,
-      sortby,
-      search,
-      page,
-      user_recipe
-    )
-      .then((result) =>
-        response(res, 200, true, result.rows, "get data sukses")
-      )
-      .catch((err) => response(res, 401, false, err.message, "get data fail"));
+  getComment: async (req, res) => {
+    try {
+      const result = await ModelsRecipe.getComents(req.params.id_recipe);
+      response(res, 200, true, result.rows, "Get comment success");
+    } catch (error) {
+      console.log(error);
+      response(res, 404, false, error, "Get comment fail");
+    }
   },
 
   getRecipe: async (req, res, next) => {
@@ -84,12 +81,154 @@ const recipeControllers = {
     }
   },
 
-  delete: (req, res, next) => {
-    ModelsRecipe.deleteRecipe(req.params.id_recipe)
-      .then((result) =>
-        response(res, 200, true, result.rows, "Delete data succsess")
-      )
-      .catch((err) => response(res, 401, false, err, "Delete data fail"));
+  addSaveRecipe: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const result = await ModelsRecipe.saveRecipes(req.body, user_id);
+
+      response(res, 200, true, result.rows, "Post save recipe success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "Post save recipe fail");
+    }
+  },
+
+  addComment: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const recipe_id = req.params.id_recipe;
+      const data = {
+        recipe_id,
+        comment: req.body.comment,
+      };
+      console.log(data);
+      await ModelsRecipe.insertComment(user_id, data);
+      response(res, 200, true, data, "Insert Comment Success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "Insert Comment Failed");
+    }
+  },
+
+  postLike: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const result = await ModelsRecipe.postLikeRecipe(req.body, user_id);
+      response(res, 200, true, result.rows, "Post like success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "Post like fail");
+    }
+  },
+
+  getSaved: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const result = await ModelsRecipe.getSavedRecipe(user_id);
+      response(res, 200, true, result.rows, "Get saved recipe success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "Get saved recipe false");
+    }
+  },
+
+  getLike: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const result = await ModelsRecipe.getLikeRecipe(user_id);
+      response(res, 200, true, result.rows, "Get like success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "Get like fail");
+    }
+  },
+
+  deleteSaved: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const result = await ModelsRecipe.deleteSavedRecipe(
+        user_id,
+        req.params.id_saved
+      );
+      response(res, 200, true, result.rows, "Delete save recipe success");
+    } catch (err) {
+      response(res, 404, false, err, "Delete saved recipe fail");
+    }
+  },
+
+  deleteLike: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const result = await ModelsRecipe.deleteLikeRecipe(
+        user_id,
+        req.params.id_liked
+      );
+      response(res, 200, true, result.rows, "Delete like success");
+    } catch (err) {
+      console.log(err);
+      response(res, 404, false, err, "Delete like fail");
+    }
+  },
+
+  editRecipe: async (req, res) => {
+    try {
+      const {
+        photo: [photo],
+        video: [video],
+      } = req.files;
+      const { title, ingredients } = req.body;
+      req.body.photo = photo.path;
+      req.body.video = video.path;
+      const data = { title, ingredients, photo, video };
+      await ModelsRecipe.editRecipes(req.params.id_recipe, data);
+      return response(res, 200, true, req.body, "Update Recipe Success");
+    } catch (err) {
+      console.log(err);
+      return response(res, 404, false, err, "Update Recipe Fail");
+    }
+  },
+
+  // sort: async (req, res, next) => {
+  //   try {
+  //     const page = Number(req.query.page) || 1;
+  //     const limit = Number(req.query.limit) || 10;
+  //     const offset = (page - 1) * limit;
+  //     const sortby = req.query.sortby || "title";
+  //     const sort = req.query.sort || "asc";
+  //     const search = req.query.search || "";
+  //     const result = await ModelsRecipe.sort(
+  //       limit,
+  //       offset,
+  //       sort,
+  //       sortby,
+  //       search
+  //     );
+  //     response(res, 200, true, result.rows, "get data success");
+  //   } catch (err) {
+  //     console.log(err);
+  //     response(res, 404, false, err, "get data fail");
+  //   }
+  // },
+
+  deleteRecipe: async (req, res) => {
+    try {
+      const user_id = req.payload.id_user;
+      console.log(user_id);
+      const result = await ModelsRecipe.deleteRecipes(
+        user_id,
+        req.params.id_recipe
+      );
+      response(res, 200, true, result.rows, "Delete recipe success");
+    } catch (err) {
+      response(res, 404, false, err, "Delete recipe fail");
+    }
   },
 };
 exports.recipeControllers = recipeControllers;
