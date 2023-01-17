@@ -84,10 +84,10 @@ const getRecipeByUser = (user_id) => {
   return Pool.query(`SELECT * FROM recipe WHERE user_id = '${user_id}'`);
 };
 
-const getSavedRecipe = (user_id) => {
+const getSelectSave = (user_id) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `SELECT saved_recipe.id_saved,saved_recipe.user_id,saved_recipe.recipe_id,recipe.title,recipe.photo FROM saved_recipe INNER JOIN recipe ON saved_recipe.recipe_id = recipe.id_recipe WHERE saved_recipe.user_id='${user_id}'`,
+      `SELECT saved_recipe.id_saved,saved_recipe.user_id,saved_recipe.recipe_id,recipe.title,recipe.photo FROM saved_recipe INNER JOIN recipe ON saved_recipe.recipe_id=recipe.id_recipe WHERE saved_recipe.user_id='${user_id}'`,
       (err, result) => {
         if (!err) {
           resolve(result);
@@ -241,7 +241,7 @@ module.exports = {
   getComents,
   getLikeRecipe,
   getRecipeByUser,
-  getSavedRecipe,
+  getSelectSave,
   getRecipeUser,
   editRecipes,
   deleteSavedRecipe,

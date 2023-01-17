@@ -91,21 +91,11 @@ const getDataUsersById = (id_user) => {
   return Pool.query(`SELECT * FROM users WHERE id_user = '${id_user}'`);
 };
 
-const updateProfile = ({ photo }, email) => {
-  return new Promise((resolve, reject) => {
-    Pool.query(
-      `UPDATE users SET photo='${photo}' WHERE email = '${email}';`,
-      [photo],
-      (err, result) => {
-        if (!err) {
-          console.log(result);
-          resolve(result);
-        } else {
-          reject(new Error(err));
-        }
-      }
-    );
-  });
+const updatePhotoUser = (id_user, dataUsers) => {
+  const { photo } = dataUsers;
+  return Pool.query(
+    `UPDATE users SET photo='${photo}' WHERE id_user='${id_user}'`
+  );
 };
 
 module.exports = {
@@ -116,5 +106,5 @@ module.exports = {
   getDataUsersById,
   getProfile,
   getData,
-  updateProfile,
+  updatePhotoUser,
 };

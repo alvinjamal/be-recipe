@@ -103,6 +103,7 @@ const UsersController = {
     delete users.otp;
     delete users.verif;
     let payload = {
+      id_user: users.id_user,
       email: users.email,
     };
     users.token = generateToken(payload);
@@ -185,17 +186,43 @@ const UsersController = {
       );
   },
 
-  updateUsers: async (req, res, next) => {
-    const profile = {};
-    const email = req.payload.email;
-    const { photo } = req.files;
-    profile.photo = photo ? photo.path : null;
+  profile: async (req, res, next) => {
+    const { email } = req.payload;
 
-    updateProfile(email, req.body)
-      .then((data) => {
-        responses(res, 200, true, data, "success upload photo");
-      })
-      .catch((e) => responses(res, 404, false, e, "failed upload photo"));
+    try {
+      const {
+        rows: [users],
+      } = await findEmail(email);
+
+      if (users === undefined) {
+        res.json({
+          message: "invalid token",
+        });
+        return;
+      }
+
+      response(res, 200, true, users, "Get data success");
+    } catch (error) {
+      console.log(error);
+      response(res, 404, false, "Get data fail");
+    }
+  },
+
+  insertPhoto: async (req, res) => {
+    try {
+      const id_user = req.params.id_user;
+      console.log("id_user", id_user);
+      const {
+        photo: [photo],
+      } = req.files;
+      req.body.photo = photo.path;
+
+      await ModelUsers.updatePhotoUser(id_user, req.body);
+      return response(res, 200, true, req.body, "Update Photo Success");
+    } catch (err) {
+      console.log(err);
+      return response(res, 404, false, err, "Update Photo Fail");
+    }
   },
 
   getProfile: async (req, res, next) => {

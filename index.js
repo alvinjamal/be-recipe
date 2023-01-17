@@ -1,8 +1,11 @@
 const express = require("express");
 const cors = require(`cors`);
 const morgan = require(`morgan`);
+const cookieParser = require("cookie-parser");
+const helmet = require("helmet");
 const bodyParser = require(`body-parser`);
 require(`dotenv`).config();
+const xss = require("xss-clean");
 const upload = require("./src/middlewares/upload");
 
 const mainRouter = require("./src/routes/index");
@@ -11,9 +14,17 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(cors("*"));
+app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false,
+  })
+);
+app.use(xss());
 
 app.use("/", mainRouter);
 

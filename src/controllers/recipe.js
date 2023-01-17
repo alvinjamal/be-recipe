@@ -2,6 +2,7 @@ const { resp, response } = require("../middlewares/common");
 const cloudinary = require("../config/photo");
 const ModelsRecipe = require("../models/recipe");
 const { uuid } = require("uuidv4");
+const { use } = require("../routes/recipe");
 
 const Port = process.env.PORT;
 const Host = process.env.HOST;
@@ -41,7 +42,7 @@ const recipeControllers = {
 
   getRecipeUser: async (req, res) => {
     try {
-      const user_id = req.payload.id_user;
+      const user_id = req.params.id_user;
       console.log("id_user", user_id);
       const result = await ModelsRecipe.getRecipeByUser(user_id);
       response(res, 200, true, result.rows, "Success Get Recipe By user");
@@ -63,7 +64,7 @@ const recipeControllers = {
   getRecipe: async (req, res, next) => {
     try {
       const page = Number(req.query.page) || 1;
-      const limit = Number(req.query.limit) || 20;
+      const limit = Number(req.query.limit) || 6;
       const sortby = req.query.sortby || "title";
       const sort = req.query.sort || "ASC";
       const search = req.query.search || "";
@@ -127,8 +128,7 @@ const recipeControllers = {
   getSaved: async (req, res) => {
     try {
       const user_id = req.payload.id_user;
-      console.log(user_id);
-      const result = await ModelsRecipe.getSavedRecipe(user_id);
+      const result = await ModelsRecipe.getSelectSave(user_id);
       response(res, 200, true, result.rows, "Get saved recipe success");
     } catch (err) {
       console.log(err);
@@ -139,7 +139,6 @@ const recipeControllers = {
   getLike: async (req, res) => {
     try {
       const user_id = req.payload.id_user;
-      console.log(user_id);
       const result = await ModelsRecipe.getLikeRecipe(user_id);
       response(res, 200, true, result.rows, "Get like success");
     } catch (err) {

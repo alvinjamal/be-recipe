@@ -19,7 +19,7 @@ CREATE TABLE recipe(
 CREATE TABLE comment(
     id_comment SERIAL PRIMARY KEY,
     comment VARCHAR NOT NULL,
-    users_id VARCHAR REFERENCES users(id_user),
+    user_id VARCHAR REFERENCES users(id_user),
     recipe_id INT REFERENCES recipe(id_recipe)
 );
 
@@ -33,4 +33,7 @@ CREATE TABLE saved_recipe (
     id_saved SERIAL PRIMARY KEY,
     user_id VARCHAR REFERENCES users(id_user),
     recipe_id INT REFERENCES recipe(id_recipe)
-)
+);
+
+DROP TABLE comment;
+DROP TABLE 

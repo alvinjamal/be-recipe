@@ -6,10 +6,10 @@ const { protect } = require("../middlewares/auth");
 
 // GET
 router.get("/", protect, recipeControllers.getRecipe);
-router.get("/:id_recipe", recipeControllers.getDetailById);
-router.get("/recipe-user", recipeControllers.getRecipeUser);
-router.get("/saved-recipe", protect, recipeControllers.getSaved);
 router.get("/like-recipe", protect, recipeControllers.getLike);
+router.get("/saved-recipe", protect, recipeControllers.getSaved);
+router.get("/:id_recipe", recipeControllers.getDetailById);
+router.get("/recipe-user/:user", recipeControllers.getRecipeUser);
 router.get("/comment/:id_recipe", recipeControllers.getComment);
 // router.get("/search-recipe", recipeControllers.sort);
 

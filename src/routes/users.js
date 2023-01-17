@@ -5,20 +5,20 @@ const { user } = require("../middlewares/user");
 const upload = require("../middlewares/upload");
 const { protect } = require("../middlewares/auth");
 
-router.get("/", UsersController.getDataAll);
 // AUTH
 router.post("/register", UsersController.registerUsers);
 router.post("/login", UsersController.login);
 router.post("/verification", UsersController.verificationOtp);
 router.post("/forgot", UsersController.forgotPassword);
 router.post("/forgot/:token", UsersController.resetPassword);
+
 router.put(
-  "/edit/",
-  protect,
+  "/update-photo/:id_user",
   upload.single("photo"),
-  UsersController.updateUsers
+  UsersController.insertPhoto
 );
 // GET
+router.get("/", UsersController.getDataAll);
 router.get("/:id_user", UsersController.getDetail);
 router.get("/profile", UsersController.getProfile);
 
