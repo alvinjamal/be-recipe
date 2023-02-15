@@ -1,9 +1,10 @@
 const Pool = require("../config/db");
+const { use } = require("../routes/recipe");
 
-const insert = (data) => {
+const insert = (user_id, data) => {
   const { title, ingredients, photo, video } = data;
   return Pool.query(
-    `INSERT INTO recipe(title, ingredients, photo, video)VALUES('${title}','${ingredients}','${photo}','${video}')`
+    `INSERT INTO recipe(title, ingredients, photo, video, user_id)VALUES('${title}','${ingredients}','${photo}','${video}','${user_id}')`
   );
 };
 
@@ -213,10 +214,10 @@ const editRecipes = (id_recipe, data) => {
 //   );
 // };
 
-const deleteRecipes = (user_id, id_recipe) => {
+const deleteRecipes = (id_recipe) => {
   return new Promise((resolve, reject) => {
     Pool.query(
-      `DELETE FROM recipe WHERE id_recipe=${id_recipe} AND user_id='${user_id}'`,
+      `DELETE FROM recipe WHERE id_recipe=${id_recipe}`,
       (err, result) => {
         if (!err) {
           resolve(result);

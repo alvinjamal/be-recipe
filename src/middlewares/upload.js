@@ -1,5 +1,4 @@
 const multer = require("multer");
-const { response } = require("./common");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -12,7 +11,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-  limits: { fileSize: 10 * 1024 ** 2 },
   storage: storage,
   fileFilter: (res, file, cb) => {
     if (
@@ -24,7 +22,9 @@ const upload = multer({
       cb(null, true);
     } else {
       cb(null, false);
-      return cb(new Error("Input file with png, jpg, mp4, mkv format"));
+      return cb(
+        new Error("Input file with image or videos format (png/jpg/mkv/mp4)")
+      );
     }
   },
 });

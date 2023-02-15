@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { UsersController } = require("../controllers/users");
 const { user } = require("../middlewares/user");
-const upload = require("../middlewares/upload");
+const upload = require("../middlewares/upload-video");
 const { protect } = require("../middlewares/auth");
 
 // AUTH
@@ -13,13 +13,17 @@ router.post("/forgot", UsersController.forgotPassword);
 router.post("/forgot/:token", UsersController.resetPassword);
 
 router.put(
-  "/update-photo/:id_user",
-  upload.single("photo"),
-  UsersController.insertPhoto
+  "/update/:id_user",
+  upload,
+  UsersController.updatePhoto,
+  function (req, res) {
+    res.header("Access-Control-Allow-Origin", "https://localhost:3000");
+    res.header("Access-Control-Allow-Credentials", true);
+  }
 );
 // GET
 router.get("/", UsersController.getDataAll);
-router.get("/:id_user", UsersController.getDetail);
-router.get("/profile", UsersController.getProfile);
+router.get("/profile", protect, UsersController.getProfile);
+router.get("/:id_user", protect, UsersController.getDetail);
 
 module.exports = router;

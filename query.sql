@@ -1,9 +1,10 @@
+-- Active: 1673703055127@@127.0.0.1@2311@next-js
 CREATE TABLE users(
     id_user VARCHAR NOT NULL PRIMARY KEY, 
     fullname VARCHAR NOT NULL, 
     email TEXT NOT NULL,  
     phone VARCHAR, password TEXT NOT NULL, 
-    photo VARCHAR(300) DEFAULT NULL,
+    photo VARCHAR(300),
     verif VARCHAR(1), 
     otp VARCHAR(6));
 
@@ -36,4 +37,8 @@ CREATE TABLE saved_recipe (
 );
 
 DROP TABLE comment;
-DROP TABLE 
+DROP TABLE users;
+
+ALTER TABLE users DROP COLUMN photo;
+ALTER TABLE users ADD COLUMN photo VARCHAR(500);
+

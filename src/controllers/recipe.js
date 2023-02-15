@@ -1,8 +1,6 @@
 const { resp, response } = require("../middlewares/common");
-const cloudinary = require("../config/photo");
+const cloudinary = require("../config/cloudinary");
 const ModelsRecipe = require("../models/recipe");
-const { uuid } = require("uuidv4");
-const { use } = require("../routes/recipe");
 
 const Port = process.env.PORT;
 const Host = process.env.HOST;
@@ -10,15 +8,22 @@ const Host = process.env.HOST;
 const recipeControllers = {
   addRecipe: async (req, res) => {
     try {
-      const image = await cloudinary.uploader.upload(req.file.path, {
-        folder: "food",
-      });
-      req.body.photo = image.url;
-      await ModelsRecipe.insert(req.body);
+      const user_id = req.payload.id_user;
+      // const image = await cloudinary.uploader.upload(req.file.path, {
+      //   folder: "food",
+      // });
+      // const {
+      //   photo: [photo],
+      //   video: [video],
+      // } = req.files;
+      const { photo, video } = req.files;
+      req.body.photo = photo[0].path;
+      req.body.video = video[0].path;
+      await ModelsRecipe.insert(user_id, req.body);
       return response(res, 200, true, req.body, "Insert Recipe Success");
     } catch (err) {
       console.log(err);
-      return response(res, 404, false, err, "Insert Recipe Fail");
+      return response(res, 500, false, err, "Insert Recipe Failed");
     }
   },
 
@@ -31,18 +36,18 @@ const recipeControllers = {
       } = await ModelsRecipe.selectRecipeById(id_recipe);
 
       if (!recipe) {
-        return response(res, 404, false, [], "recipe not found");
+        return response(res, 500, false, [], "recipe not found");
       }
 
       response(res, 200, true, recipe, "Get data recipe success");
     } catch (error) {
-      response(res, 404, false, null, " Get data recipe failed");
+      response(res, 500, false, null, " Get data recipe failed");
     }
   },
 
   getRecipeUser: async (req, res) => {
     try {
-      const user_id = req.params.id_user;
+      const user_id = req.payload.id_user;
       console.log("id_user", user_id);
       const result = await ModelsRecipe.getRecipeByUser(user_id);
       response(res, 200, true, result.rows, "Success Get Recipe By user");
@@ -53,11 +58,12 @@ const recipeControllers = {
 
   getComment: async (req, res) => {
     try {
-      const result = await ModelsRecipe.getComents(req.params.id_recipe);
+      const id_recipe = req.params.id_recipe;
+      const result = await ModelsRecipe.getComents(id_recipe);
       response(res, 200, true, result.rows, "Get comment success");
     } catch (error) {
       console.log(error);
-      response(res, 404, false, error, "Get comment fail");
+      response(res, 500, false, error, "Get comment fail");
     }
   },
 
@@ -78,7 +84,7 @@ const recipeControllers = {
       response(res, 200, true, result.rows, "Get Data Success");
     } catch (err) {
       console.log(err);
-      response(res, 404, false, err, "Get Data Fail");
+      response(res, 500, false, err, "Get Data Fail");
     }
   },
 
@@ -91,7 +97,7 @@ const recipeControllers = {
       response(res, 200, true, result.rows, "Post save recipe success");
     } catch (err) {
       console.log(err);
-      response(res, 404, false, err, "Post save recipe fail");
+      response(res, 500, false, err, "Post save recipe fail");
     }
   },
 
@@ -109,7 +115,7 @@ const recipeControllers = {
       response(res, 200, true, data, "Insert Comment Success");
     } catch (err) {
       console.log(err);
-      response(res, 404, false, err, "Insert Comment Failed");
+      response(res, 500, false, err, "Insert Comment Failed");
     }
   },
 
@@ -121,7 +127,7 @@ const recipeControllers = {
       response(res, 200, true, result.rows, "Post like success");
     } catch (err) {
       console.log(err);
-      response(res, 404, false, err, "Post like fail");
+      response(res, 500, false, err, "Post like fail");
     }
   },
 
@@ -132,7 +138,7 @@ const recipeControllers = {
       response(res, 200, true, result.rows, "Get saved recipe success");
     } catch (err) {
       console.log(err);
-      response(res, 404, false, err, "Get saved recipe false");
+      response(res, 500, false, err, "Get saved recipe false");
     }
   },
 
@@ -143,7 +149,7 @@ const recipeControllers = {
       response(res, 200, true, result.rows, "Get like success");
     } catch (err) {
       console.log(err);
-      response(res, 404, false, err, "Get like fail");
+      response(res, 500, false, err, "Get like fail");
     }
   },
 
@@ -157,7 +163,7 @@ const recipeControllers = {
       );
       response(res, 200, true, result.rows, "Delete save recipe success");
     } catch (err) {
-      response(res, 404, false, err, "Delete saved recipe fail");
+      response(res, 500, false, err, "Delete saved recipe fail");
     }
   },
 
@@ -172,7 +178,7 @@ const recipeControllers = {
       response(res, 200, true, result.rows, "Delete like success");
     } catch (err) {
       console.log(err);
-      response(res, 404, false, err, "Delete like fail");
+      response(res, 500, false, err, "Delete like fail");
     }
   },
 
@@ -190,7 +196,7 @@ const recipeControllers = {
       return response(res, 200, true, req.body, "Update Recipe Success");
     } catch (err) {
       console.log(err);
-      return response(res, 404, false, err, "Update Recipe Fail");
+      return response(res, 500, false, err, "Update Recipe Fail");
     }
   },
 
@@ -212,21 +218,17 @@ const recipeControllers = {
   //     response(res, 200, true, result.rows, "get data success");
   //   } catch (err) {
   //     console.log(err);
-  //     response(res, 404, false, err, "get data fail");
+  //     response(res, 500, false, err, "get data fail");
   //   }
   // },
 
   deleteRecipe: async (req, res) => {
     try {
-      const user_id = req.payload.id_user;
-      console.log(user_id);
-      const result = await ModelsRecipe.deleteRecipes(
-        user_id,
-        req.params.id_recipe
-      );
+      const id_recipe = req.params.id_recipe;
+      const result = await ModelsRecipe.deleteRecipes(id_recipe);
       response(res, 200, true, result.rows, "Delete recipe success");
     } catch (err) {
-      response(res, 404, false, err, "Delete recipe fail");
+      response(res, 500, false, err, "Delete recipe fail");
     }
   },
 };

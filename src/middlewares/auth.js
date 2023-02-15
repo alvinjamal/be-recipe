@@ -6,9 +6,9 @@ let key = process.env.JWT_KEY;
 const protect = (req, res, next) => {
   try {
     let token;
-    if (req.headers.authorization) {
-      let auth = req.headers.authorization;
-      token = auth.split(" ")[1];
+    if (req.cookies.token) {
+      let auth = req.cookies.token;
+      token = auth;
       let decode = jwt.verify(token, key);
       req.payload = decode;
       next();

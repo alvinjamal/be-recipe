@@ -12,8 +12,8 @@ const storage = new CloudinaryStorage({
   params: {
     folder: "food",
     resource_type: "auto",
-    allowedFormats: ["jpeg", "png", "jpg", "mp4"],
+    allowedFormats: ["jpeg", "png", "jpg", "mp4", "mkv"],
   },
 });
 
-(module.exports = cloudinary), storage;
+module.exports = storage;
