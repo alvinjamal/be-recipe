@@ -1,4 +1,4 @@
-<h2 align="center">Food Recipe</h2>
+<h1 align="center">Food Recipe</h1>
 
 ## Users
 
