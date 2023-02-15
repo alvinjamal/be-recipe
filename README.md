@@ -25,16 +25,27 @@ POST users/verification
 {
     "success": true,
     "statusCode": 200,
-    "data": {
-        "command": "UPDATE",
-        "rowCount": 1,
-        "oid": null,
-        "rows": [],
-        "fields": [],
-        "RowCtor": null,
-        "rowAsArray": false
-    },
+    "data": [],
     "message": " verification email success"
+}
+```
+### Login
+
+POST users/login
+
+```Body
+{
+    "success": true,
+    "statusCode": 200,
+    "data": {
+        "id_user": "367c1d1a-2596-4746-bc24-20b80982f0ab",
+        "fullname": "Alvin Jamal Azkya",
+        "email": "alvinjamalazkya@gmail.com",
+        "phone": "083816767374",
+        "photo": "https://res.cloudinary.com/diunwoak6/image/upload/v1676379392/food/huaopbzuzgcziepowyvq.png",
+        "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoiMzY3YzFkMWEtMjU5Ni00NzQ2LWJjMjQtMjBiODA5ODJmMGFiIiwiZW1haWwiOiJhbHZpbmphbWFsYXpreWFAZ21haWwuY29tIiwiaWF0IjoxNjc2NDc5ODQwLCJleHAiOjE2NzY0ODM0NDB9.smbmDK31cWmJLROJxd1cw8z2-b1f4vMfQMTl-EOqKGc"
+    },
+    "message": "Login Success"
 }
 ```
 
@@ -58,15 +69,7 @@ POST users/forgot/:token
 {
     "success": true,
     "statusCode": 200,
-    "data": {
-        "command": "UPDATE",
-        "rowCount": 1,
-        "oid": null,
-        "rows": [],
-        "fields": [],
-        "RowCtor": null,
-        "rowAsArray": false
-    },
+    "data": [],
     "message": " change password success"
 }
 ```
