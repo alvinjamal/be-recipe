@@ -131,7 +131,13 @@ const UsersController = {
 
     if (users.otp == otp) {
       const result = await verification(req.body.email);
-      return response(res, 200, true, result, " verification email success");
+      return response(
+        res,
+        200,
+        true,
+        result.rows,
+        " verification email success"
+      );
     }
     return response(
       res,
@@ -174,7 +180,7 @@ const UsersController = {
     }
     let password = bcrypt.hashSync(req.body.password);
     const result = await changePassword(decoded.email, password);
-    return response(res, 200, true, result, " change password success");
+    return response(res, 200, true, result.rows, " change password success");
   },
 
   getDataAll: async (req, res, next) => {
