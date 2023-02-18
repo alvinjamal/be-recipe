@@ -13,18 +13,6 @@ const mainRouter = require("./src/routes/index");
 const app = express();
 const port = process.env.PORT;
 
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header(
-//     "Access-Control-Allow-Methods",
-//     "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-//   );
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "x-access-token, Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
 app.use(
   cors({
     credentials: true,
@@ -32,9 +20,8 @@ app.use(
   })
 );
 app.use(cors({ origin: true, credentials: true }));
-// app.use(cors("*"));
-app.use(cookieParser());
 app.use(morgan("dev"));
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
