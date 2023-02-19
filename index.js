@@ -20,7 +20,7 @@ const port = process.env.PORT;
 //   })
 // );
 const corsOptions = {
-  origin: "https://frontend-food-recipe.vercel.app",
+  origin: "https://food-recipe-alvinjamal.vercel.app",
   credentials: true,
   optionSuccessStatus: 200,
 };
