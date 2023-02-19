@@ -21,7 +21,10 @@ router.post(
   upload,
   recipeControllers.addRecipe,
   function (req, res) {
-    res.header("Access-Control-Allow-Origin", "https://localhost:3000");
+    res.header(
+      "Access-Control-Allow-Origin",
+      "https://food-recipe-alvinjamal.vercel.app"
+    );
     res.header("Access-Control-Allow-Credentials", true);
   }
 );
