@@ -17,6 +17,7 @@ app.use(
   cors({
     credentials: true,
     origin: "https://food-recipe-alvinjamal.vercel.app",
+    optionSuccessStatus: 200,
   })
 );
 app.use(cors({ origin: true, credentials: true }));
