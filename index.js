@@ -16,8 +16,7 @@ const port = process.env.PORT;
 app.use(
   cors({
     credentials: true,
-    origin: "https://food-recipe-alvinjamal.vercel.app",
-    optionSuccessStatus: 200,
+    origin: "http://localhost:3000",
   })
 );
 app.use(cors({ origin: true, credentials: true }));
@@ -39,7 +38,7 @@ app.use("/img", express.static("./upload"));
 app.use(upload.array());
 
 app.all("*", (req, res, next) => {
-  res.status(404).json({ status: "error", statusCode: 404 });
+  res.status(500).json({ status: "error", statusCode: 500 });
 });
 
 app.use("/", (req, res, next) => {

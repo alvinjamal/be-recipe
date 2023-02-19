@@ -13,16 +13,16 @@ const protect = (req, res, next) => {
       req.payload = decode;
       next();
     } else {
-      return response(res, 404, false, null, "server need token");
+      return response(res, 500, false, null, "server need token");
     }
   } catch (err) {
     console.log(err);
     if (err && err.name == "JsonWebTokenError") {
-      return response(res, 404, false, null, "invalid token");
+      return response(res, 500, false, null, "invalid token");
     } else if (err && err.name == "TokenExpriredError") {
-      return response(res, 404, false, null, "expired token");
+      return response(res, 500, false, null, "expired token");
     } else {
-      return response(res, 404, false, null, "token not active");
+      return response(res, 500, false, null, "token not active");
     }
   }
 };
