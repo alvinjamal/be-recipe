@@ -115,7 +115,7 @@ const UsersController = {
       maxAge: 60 * 1000 * 60 * 12,
       secure: true,
       path: "/",
-      sameSite: "strict",
+      sameSite: "none",
     });
     response(res, 200, true, users, "Login Success");
   },
