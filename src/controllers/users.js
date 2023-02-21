@@ -113,7 +113,7 @@ const UsersController = {
     res.cookie("token", users.token, {
       httpOnly: true,
       maxAge: 60 * 1000 * 60 * 12,
-      secure: false,
+      secure: true,
       path: "/",
       sameSite: "strict",
     });

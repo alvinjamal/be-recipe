@@ -2,7 +2,6 @@ const Pool = require("./../config/db");
 
 const create = (data) => {
   const { id_user, fullname, email, password, phone, otp } = data;
-  console.log(data);
   return new Promise((resolve, reject) =>
     Pool.query(
       `INSERT INTO users(id_user,fullname,email,password,phone,verif,otp) VALUES('${id_user}','${fullname}','${email}','${password}','${phone}',0,${otp})`,

@@ -1,4 +1,4 @@
--- Active: 1673703055127@@127.0.0.1@2311@next-js
+-- Active: 1676894488542@@127.0.0.1@5432@postgres
 CREATE TABLE users(
     id_user VARCHAR NOT NULL PRIMARY KEY, 
     fullname VARCHAR NOT NULL, 
@@ -6,7 +6,8 @@ CREATE TABLE users(
     phone VARCHAR, password TEXT NOT NULL, 
     photo VARCHAR(300),
     verif VARCHAR(1), 
-    otp VARCHAR(6));
+    otp VARCHAR(6)
+    );
 
 CREATE TABLE recipe(
     id_recipe SERIAL PRIMARY KEY,
