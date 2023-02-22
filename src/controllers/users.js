@@ -71,7 +71,7 @@ const UsersController = {
   refresh: async (req, res) => {
     const {
       rows: [users],
-    } = await findEmail(req.body.email_user);
+    } = await findEmail(req.body.email);
     if (!users) {
       return resp(res, 500, false, "Email not found");
     }
@@ -80,8 +80,8 @@ const UsersController = {
       return resp(res, 500, false, "Wrong refresh token ");
     }
     const payload = {
-      email_user: users.email_user,
-      role_user: users.role_user,
+      email: users.email,
+      role: users.role,
     };
     users.newToken = generateToken(payload);
     resp(res, 200, true, users, "Success get new token ");
@@ -106,6 +106,7 @@ const UsersController = {
     delete users.otp;
     delete users.verif;
     let payload = {
+      token: users.token,
       id_user: users.id_user,
       email: users.email,
     };
