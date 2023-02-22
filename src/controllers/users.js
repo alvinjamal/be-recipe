@@ -106,7 +106,6 @@ const UsersController = {
     delete users.otp;
     delete users.verif;
     let payload = {
-      token: users.token,
       id_user: users.id_user,
       email: users.email,
     };
