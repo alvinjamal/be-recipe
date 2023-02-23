@@ -6,7 +6,7 @@ const { protect } = require("../middlewares/auth");
 // const { sizeUpload } = require("../middlewares/upload-video");
 
 // GET
-router.get("/", recipeControllers.getRecipe);
+router.get("/", protect, recipeControllers.getRecipe);
 router.get("/like-recipe", protect, recipeControllers.getLike);
 router.get("/saved-recipe", protect, recipeControllers.getSaved);
 router.get("/recipe-user", protect, recipeControllers.getRecipeUser);
