@@ -113,10 +113,10 @@ const UsersController = {
     res.cookie("token", users.token, {
       httpOnly: true,
       maxAge: 60 * 1000 * 60 * 12,
-      domain: "food-recipe-alvinjamal.vercel.app",
+      // domain: "food-recipe-alvinjamal.vercel.app",
       secure: true,
       path: "/",
-      sameSite: "lax",
+      sameSite: "none",
     });
     response(res, 200, true, users, "Login Success");
   },
