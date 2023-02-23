@@ -113,6 +113,7 @@ const UsersController = {
     res.cookie("token", users.token, {
       httpOnly: true,
       maxAge: 60 * 1000 * 60 * 12,
+      domain: ".vercel.app",
       secure: true,
       path: "/",
       sameSite: "none",
