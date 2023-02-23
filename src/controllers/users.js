@@ -116,7 +116,7 @@ const UsersController = {
       domain: ".vercel.app",
       secure: true,
       path: "/",
-      sameSite: "none",
+      sameSite: "lax",
     });
     response(res, 200, true, users, "Login Success");
   },
