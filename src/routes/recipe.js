@@ -10,7 +10,18 @@ router.get("/", protect, recipeControllers.getRecipe);
 router.get("/like-recipe", protect, recipeControllers.getLike);
 router.get("/saved-recipe", protect, recipeControllers.getSaved);
 router.get("/recipe-user", protect, recipeControllers.getRecipeUser);
-router.get("/detail/:id_recipe", protect, recipeControllers.getDetailById);
+router.get(
+  "/detail/:id_recipe",
+  protect,
+  recipeControllers.getDetailById,
+  function (req, res) {
+    res.header(
+      "Access-Control-Allow-Origin",
+      "https://food-recipe-alvinjamal.vercel.app"
+    );
+    res.header("Access-Control-Allow-Credentials", true);
+  }
+);
 
 router.get("/comment/:id_recipe", protect, recipeControllers.getComment);
 

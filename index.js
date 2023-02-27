@@ -20,6 +20,7 @@ const port = process.env.PORT;
 //   })
 // );
 const corsOptions = {
+  // origin: "http://localhost:3000",
   origin: "https://food-recipe-alvinjamal.vercel.app",
   credentials: true,
   optionSuccessStatus: 200,
