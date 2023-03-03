@@ -13,12 +13,6 @@ const mainRouter = require("./src/routes/index");
 const app = express();
 const port = process.env.PORT;
 
-// app.use(
-//   cors({
-//     credentials: true,
-//     origin: "http://localhost:3000",
-//   })
-// );
 const corsOptions = {
   // origin: "http://localhost:3000",
   origin: "https://food-recipe-alvinjamal.vercel.app",

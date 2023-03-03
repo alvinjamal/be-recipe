@@ -13,18 +13,7 @@ router.post("/verification", UsersController.verificationOtp);
 router.post("/forgot", UsersController.forgotPassword);
 router.post("/forgot/:token", UsersController.resetPassword);
 
-router.put(
-  "/update/:id_user",
-  upload,
-  UsersController.updatePhoto,
-  function (req, res) {
-    res.header(
-      "Access-Control-Allow-Origin",
-      "https://food-recipe-alvinjamal.vercel.app"
-    );
-    res.header("Access-Control-Allow-Credentials", true);
-  }
-);
+router.put("/update", upload, UsersController.updatePhoto);
 // GET
 router.get("/", UsersController.getDataAll);
 router.get("/profile", protect, UsersController.getProfile);

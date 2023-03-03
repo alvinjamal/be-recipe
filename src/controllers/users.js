@@ -227,13 +227,12 @@ const UsersController = {
 
   updatePhoto: async (req, res) => {
     try {
-      const id_user = req.params;
+      const id_user = req.payload.id_user;
       // const image = await cloudinary.uploader.upload(req.file.path, {
       //   folder: "food",
       // });
       // req.body.photo = image.uri;
       const { photo } = req.files;
-      console.log("adalah req file", req.files);
       req.body.photo = photo[0].path;
       await updatePhotoUser(id_user, req.body);
       return response(res, 200, true, req.body, "Update Photo Success");
