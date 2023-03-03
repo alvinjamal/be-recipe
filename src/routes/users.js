@@ -13,7 +13,7 @@ router.post("/verification", UsersController.verificationOtp);
 router.post("/forgot", UsersController.forgotPassword);
 router.post("/forgot/:token", UsersController.resetPassword);
 
-router.put("/update", upload, UsersController.updatePhoto);
+router.put("/update", protect, upload, UsersController.updatePhoto);
 // GET
 router.get("/", UsersController.getDataAll);
 router.get("/profile", protect, UsersController.getProfile);
