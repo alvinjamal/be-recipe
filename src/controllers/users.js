@@ -232,9 +232,11 @@ const UsersController = {
       //   folder: "food",
       // });
       // req.body.photo = image.uri;
-      const { photo } = req.files;
+      const data = {
+        photo: req.files,
+      };
       req.body.photo = photo[0].path;
-      await updatePhotoUser(id_user, req.body);
+      await updatePhotoUser(id_user, data);
       return response(res, 200, true, req.body, "Update Photo Success");
     } catch (err) {
       console.log(err);
