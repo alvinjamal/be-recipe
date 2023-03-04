@@ -230,7 +230,7 @@ const UsersController = {
       const id_user = req.params.id_user;
       const { photo } = req.files;
       req.body.photo = photo[0].path;
-      await updatePhotoUser(id_user, data);
+      await updatePhotoUser(id_user, req.body);
       return response(res, 200, true, req.body, "Update Photo Success");
     } catch (err) {
       console.log(err);
