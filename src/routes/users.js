@@ -16,7 +16,7 @@ router.post("/forgot/:token", UsersController.resetPassword);
 router.put(
   "/update/:id_user",
   protect,
-  upload,
+  upload.single("photo"),
   UsersController.updatePhoto,
   function (req, res) {
     res.header(
