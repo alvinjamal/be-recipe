@@ -17,15 +17,7 @@ router.put(
   "/update/:id_user",
   protect,
   upload.single("photo"),
-  UsersController.updatePhoto,
-  function (req, res) {
-    res.header(
-      "Access-Control-Allow-Origin",
-      "https://food-recipe-alvinjamal.vercel.app"
-    );
-    res.header("Access-Control-Allow-Credentials", true);
-  }
-);
+  UsersController.updatePhoto
 // GET
 router.get("/", UsersController.getDataAll);
 router.get("/profile", protect, UsersController.getProfile);
