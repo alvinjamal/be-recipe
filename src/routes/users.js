@@ -14,7 +14,7 @@ router.post("/forgot", UsersController.forgotPassword);
 router.post("/forgot/:token", UsersController.resetPassword);
 
 router.put(
-  "/update/:id_user",
+  "/update",
   protect,
   upload.single("photo"),
   UsersController.updatePhoto
