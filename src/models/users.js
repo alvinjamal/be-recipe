@@ -90,8 +90,8 @@ const getDataUsersById = (id_user) => {
   return Pool.query(`SELECT * FROM users WHERE id_user = '${id_user}'`);
 };
 
-const updatePhotoUser = (id_user, dataUsers) => {
-  const { photo } = dataUsers;
+const updatePhotoUser = (id_user, update) => {
+  const { photo } = update;
   return Pool.query(
     `UPDATE users SET photo='${photo}' WHERE id_user='${id_user}'`
   );
