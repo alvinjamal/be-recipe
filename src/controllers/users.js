@@ -227,7 +227,7 @@ const UsersController = {
 
   updatePhoto: async (req, res) => {
     try {
-      const id_user = req.params.id_user;
+      const id_user = req.payload.id_user;
       const { photo: [photo] } = req.files;
       req.body.photo = photo.path;
       await updatePhotoUser(id_user, req.body);
